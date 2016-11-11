@@ -18,11 +18,12 @@ package xmpp;
 
 public class ProcessorFactory {
 
-    private static final String PACKAGE = "com.grokkingandroid.sampleapp.samples.gcm";
+    private static final String PACKAGE = "com.meltwater.mobile";
     private static final String ACTION_REGISTER = PACKAGE + ".REGISTER";
     private static final String ACTION_ECHO = PACKAGE + ".ECHO";
     private static final String ACTION_MESSAGE = PACKAGE + ".MESSAGE";
-
+    private static final String ACTION_FORWARD = PACKAGE + ".FORWARD";
+    
     public static PayloadProcessor getProcessor(String action) {
         if (action == null) {
             throw new IllegalStateException("action must not be null");
@@ -35,6 +36,9 @@ public class ProcessorFactory {
         }
         else if (action.equals(ACTION_MESSAGE)) {
             return new MessageProcessor();
+        }
+        else if (action.equals(ACTION_FORWARD)) {
+            return new ForwardProcessor();
         }
         throw new IllegalStateException("Action " + action + " is unknown");
     }

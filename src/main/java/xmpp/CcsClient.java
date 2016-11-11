@@ -62,7 +62,7 @@ public class CcsClient {
     public static final Logger logger = Logger.getLogger(CcsClient.class.getName());
 
     public static final String GCM_SERVER = "fcm-xmpp.googleapis.com"; //"gcm.googleapis.com";
-    public static final int GCM_PORT = 5236;//5235;
+    public static final int GCM_PORT = 5235;//5235;
 
     public static final String GCM_ELEMENT_NAME = "gcm";
     public static final String GCM_NAMESPACE = "google:mobile:data";
@@ -213,6 +213,7 @@ public class CcsClient {
      * Handles an upstream data message from a device application.
      */
     public void handleIncomingDataMessage(CcsMessage msg) {
+    	logger.log(Level.INFO, "handleIncomingDataMessage() msg: " + msg );
         if (msg.getPayload().get("action") != null) {
             PayloadProcessor processor = ProcessorFactory.getProcessor(msg.getPayload().get("action"));
             processor.handleMessage(msg);
@@ -225,7 +226,7 @@ public class CcsClient {
      */
     private CcsMessage getMessage(Map<String, Object> jsonObject) {
         String from = jsonObject.get("from").toString();
-
+        logger.log(Level.INFO, "getMessage() from: " + from );
         // PackageName of the application that sent this message.
         String category = jsonObject.get("category").toString();
 
@@ -371,22 +372,22 @@ public class CcsClient {
 
         connection.addConnectionListener(new ConnectionListener() {
 
-            @Override
+         //   @Override
             public void reconnectionSuccessful() {
                 logger.info("Reconnecting..");
             }
 
-            @Override
+       //     @Override
             public void reconnectionFailed(Exception e) {
                 logger.log(Level.INFO, "Reconnection failed.. ", e);
             }
 
-            @Override
+           // @Override
             public void reconnectingIn(int seconds) {
-                logger.log(Level.INFO, "Reconnecting in %d secs", seconds);
+                logger.log(Level.INFO, "Reconnecting in " + seconds + " secs");
             }
 
-            @Override
+           // @Override
             public void connectionClosedOnError(Exception e) {
                 logger.log(Level.INFO, "Connection closed on error.");
             }
@@ -400,7 +401,7 @@ public class CcsClient {
         // Handle incoming packets
         connection.addPacketListener(new PacketListener() {
 
-            @Override
+           // @Override
             public void processPacket(Packet packet) {
                 logger.log(Level.INFO, "Received: " + packet.toXML());
                 Message incomingMessage = (Message) packet;
@@ -476,19 +477,7 @@ public class CcsClient {
             e.printStackTrace();
         }
 
-        // Send a sample hello downstream message to a device.
-        String messageId = ccsClient.getRandomMessageId();
-        Map<String, String> payload = new HashMap<String, String>();
-        payload.put("message", "Simple sample message");
-        String collapseKey = "sample";
-        Long timeToLive = 10000L;
-        Boolean delayWhileIdle = true;
-        Map<String, String> notification = new HashMap<String, String>();
-
-        notification.put("body", "body");
-        notification.put("title", "A Title");
-        notification.put("sound", "default");
-        ccsClient.send(createJsonMessage(toRegId, messageId, payload, collapseKey,
-                timeToLive, delayWhileIdle, notification));
+       
+       
     }
 }
